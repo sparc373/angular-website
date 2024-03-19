@@ -9,17 +9,16 @@ pool:
   vmImage: 'ubuntu-latest'
 - task: Npm@1
   inputs:
+    command: 'install'
+    become: yes
+    become_user: ubuntu
+    become_method: sudo
+- task: Npm@1
+  inputs:
     command: 'custom'
     customCommand: 'run build-prod'
-- task: ArchiveFiles@2
-  inputs:
-    rootFolderOrFile: '$(Build.BinariesDirectory)'
 - task: PublishBuildArtifacts@1
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'drop'
     publishLocation: 'Container'
-    includeRootFolder: true
-    archiveType: 'zip'
-    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-    replaceExistingArchive: true
